@@ -5,9 +5,21 @@ import axios from "axios";
 import SearchBar from "./SearchBar";
 
 class App extends React.Component {
-    onSearchSubmit(term) {
+    rootURL = 'https://api.unsplash.com';
+    getImagesURLExtension = '/search/photos';
+    ACCESS_KEY = '_Ht4d1irK5F7M1TROfNWcnKwZc8OFtdJ2AmchdCTunA';
+
+    onSearchSubmit = (term) => {
         console.log(`Calling Unsplash API with Axios: ${term}`);
-        
+        axios.get(`${this.rootURL}${this.getImagesURLExtension}`, {
+            params: { query: term },
+            headers: {
+                Authorization: `Client-ID ${this.ACCESS_KEY}`
+            }
+        }).then(response => {
+            console.log('Found Car Images:');
+            console.log(response);
+        });
     }
 
     render() {

@@ -1,33 +1,35 @@
 import React from 'react';
 
-import axios from "axios";
-
+import unsplash from '../api/unsplash';
 import SearchBar from "./SearchBar";
 
 class App extends React.Component {
-    rootURL = 'https://api.unsplash.com';
+    state = { images: [] }
     getImagesURLExtension = '/search/photos';
-    ACCESS_KEY = '_Ht4d1irK5F7M1TROfNWcnKwZc8OFtdJ2AmchdCTunA';
 
-    onSearchSubmit = (term) => {
+     onSearchSubmit = async term => {
         console.log(`Calling Unsplash API with Axios: ${term}`);
-        axios.get(`${this.rootURL}${this.getImagesURLExtension}`, {
-            params: { query: term },
-            headers: {
-                Authorization: `Client-ID ${this.ACCESS_KEY}`
-            }
-        }).then(response => {
-            console.log('Found Car Images:');
-            console.log(response);
+        const response = await unsplash.get(`${this.getImagesURLExtension}`, {
+            params: {query: term}
         });
+
+        // replaced with async keyword
+        // .then(response => {
+        //     console.log('Found Car Images:');
+        //     console.log(response.data.results);
+        // });
+
+        console.log(response.data.results);
+        this.setState({ images: response.data.results })
     }
 
     render() {
         return (
-            <div className='ui container' style={{ marginTop: '10px' }}>
-                <SearchBar onSubmit={this.onSearchSubmit} />
+            <div className='ui container' style={{marginTop: '10px'}}>
+                <SearchBar onSubmit={this.onSearchSubmit}/>
+                Found: {this.state.images.length} images
             </div>
-            );
+        );
     }
 }
 
